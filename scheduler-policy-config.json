@@ -1,0 +1,15 @@
+{
+  "kind": "Policy",
+  "apiVersion": "v1",
+  "extenders": [
+    {
+      "urlPrefix": "http://192.168.120.135:8080/extender",
+      "prioritizeVerb": "prioritize",
+      "filterVerb": "filter",
+      "enableHttps": false,
+      "nodeCacheCapable": true,
+      "ignorable": true,
+      "weight": 10
+    }
+  ]
+}
