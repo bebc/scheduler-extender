@@ -15,11 +15,11 @@ func Filter(c *gin.Context)  {
 	}
 
 
-	log.Printf("pod name:%v,nodelist: %v,node Name: %v\n",args.Pod.Name,args.Nodes.Items,args.NodeNames)
+	log.Printf("pod name:%v,node Name: %v,nodes: %v\n",args.Pod.Name,args.NodeNames)
 
 	result := api.ExtenderFilterResult{
 		Nodes:args.Nodes,
 		NodeNames:args.NodeNames,
 	}
-	c.JSON(http.StatusOK,result)
+	c.JSON(http.StatusOK,&result)
 }

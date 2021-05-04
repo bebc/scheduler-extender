@@ -1,17 +1,17 @@
 package pkg
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"k8s.io/kubernetes/pkg/scheduler/api"
 	"log"
-	"math/rand"
 	"net/http"
 )
 
 const (
 	// lucky priority gives a random [0, schedulerapi.MaxPriority] score
 	// currently schedulerapi.MaxPriority is 10
-	luckyPrioMsg = "node %v/%v is lucky to get score %v\n"
+	luckyPrioMsg = "node %v is lucky to get score %v\n"
 )
 
 
@@ -23,7 +23,7 @@ func Prioritize(c *gin.Context)  {
 	}
 
 
-	log.Printf("pod name:%v,nodelist: %v,node Name: %v",args.Pod.Name,args.Nodes.Items,args.NodeNames)
+	log.Printf("pod name:%v\n",args.Pod.Name)
 
 
 	c.JSON(http.StatusOK,prioritize(args))
@@ -31,14 +31,18 @@ func Prioritize(c *gin.Context)  {
 
 func prioritize(args api.ExtenderArgs) *api.HostPriorityList {
 	//pod := args.Pod
-	nodes := args.Nodes.Items
-
-	hostPriorityList := make(api.HostPriorityList, len(nodes))
+	nodes := *args.NodeNames
+	hostPriorityList := make(api.HostPriorityList, len(*args.NodeNames))
 	for i, node := range nodes {
-		score := rand.Intn(api.MaxPriority + 1)
-		log.Printf(luckyPrioMsg, node.Name, node.Namespace, score)
+		score :=0
+		if node == "master"{
+			fmt.Println("node is master")
+			score =1000+score
+		}
+		//score := rand.Intn(api.MaxPriority + 1)
+		log.Printf(luckyPrioMsg, node, score)
 		hostPriorityList[i] = api.HostPriority{
-			Host:  node.Name,
+			Host:  node,
 			Score: score,
 		}
 	}
